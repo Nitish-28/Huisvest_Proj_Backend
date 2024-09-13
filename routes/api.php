@@ -12,7 +12,7 @@ Route::get('/test', [TestController::class, "index"])->name('user.index');
 Route::post('/auth/login', [AuthController::class, 'login'])->name('user.login');
 
 
-Route::middleware('auth:api')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
     // read function
     Route::get('/auth/user', [AuthController::class, 'getUser'])->name('user.getUser');
     
