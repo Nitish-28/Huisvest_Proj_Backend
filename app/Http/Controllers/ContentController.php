@@ -13,7 +13,8 @@ class ContentController extends Controller
     public function index()
     {
         $contents = Content::all();
-        return view('content.index', compact('contents'));
+        //return json
+        return response()->json($contents);
     }
 
     /**
@@ -21,7 +22,9 @@ class ContentController extends Controller
      */
     public function create()
     {
-        return view('content.create');
+        //return json
+        return response()->json(['message' => 'Create form']);
+
     }
 
     /**
@@ -44,7 +47,8 @@ class ContentController extends Controller
         ]);
 
         Content::create($request->all());
-        return redirect()->route('content.index')->with('success', 'Content created successfully');
+        //return json
+        return response()->json(['message' => 'Content created successfully']);
     }
 
     /**
@@ -53,7 +57,8 @@ class ContentController extends Controller
     public function show(string $id)
     {
         $content = Content::findOrFail($id);
-        return view('content.show', compact('content'));
+        //return json
+        return response()->json($content);
     }
 
     /**
@@ -62,7 +67,8 @@ class ContentController extends Controller
     public function edit(string $id)
     {
         $content = Content::findOrFail($id);
-        return view('content.edit', compact('content'));
+        //return json
+        return response()->json($content);
     }
 
     /**
@@ -87,7 +93,8 @@ class ContentController extends Controller
         ]);
 
         $content->update($request->all());
-        return redirect()->route('content.index')->with('success', 'Content updated successfully');
+        //return json
+        return response()->json(['message' => 'Content updated successfully']);
 
     }
 
@@ -98,6 +105,7 @@ class ContentController extends Controller
     {
         $content = Content::findOrFail($id);
         $content->delete();
-        return redirect()->route('content.index')->with('success', 'Content deleted successfully');
+        //return json
+        return response()->json(['message' => 'Content deleted successfully']);
     }
 }
