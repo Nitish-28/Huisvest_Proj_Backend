@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Content;
+use Illuminate\Support\Facades\Validator;
 
 class ContentController extends Controller
 {
@@ -32,7 +33,7 @@ class ContentController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(),[
             'type' => 'required|in:house,apartment',
             'address' => 'required|string|max:255',
             'city' => 'required|string|max:255',
@@ -45,10 +46,17 @@ class ContentController extends Controller
             'bathrooms' => 'required|integer',
             'image' => 'required|string',
         ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false, 
+                'message' => $validator->errors()->first()
+            ], 422);
+        }
 
         Content::create($request->all());
         //return json
         return response()->json(['message' => 'Content created successfully']);
+
     }
 
     /**
@@ -101,7 +109,7 @@ class ContentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function delete(string $id)
     {
         $content = Content::findOrFail($id);
         $content->delete();

@@ -15,12 +15,14 @@ Route::post('/auth/register', [AuthController::class, 'register'])->name('user.r
 
 Route::middleware('auth:sanctum')->group(function () {
     // CRUD routes for content (house or apartment)
-    Route::get('/content', [ContentController::class, 'index'])->name('content.index'); // List all contents
-    Route::post('/content', [ContentController::class, 'store'])->name('content.store'); // Create new content
-    Route::get('/content/{id}', [ContentController::class, 'show'])->name('content.show'); // Show specific content
+    Route::post('/content/create', [ContentController::class, 'store'])->name('content.store'); // Create new content
     Route::put('/content/{id}', [ContentController::class, 'update'])->name('content.update'); // Update content
     Route::delete('/content/{id}', [ContentController::class, 'delete'])->name('content.destroy'); // Delete content
     
     Route::delete('/auth/delete', [AuthController::class, 'delete'])->name('user.delete');
 
 });
+
+// guest view
+Route::get('/content', [ContentController::class, 'index'])->name('content.index'); // List all contents
+Route::get('/content/{id}', [ContentController::class, 'show'])->name('content.show'); // Show specific content
