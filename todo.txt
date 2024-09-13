@@ -1,0 +1,7 @@
+Auth:
+
+- register
+
+General:
+
+- Krt
