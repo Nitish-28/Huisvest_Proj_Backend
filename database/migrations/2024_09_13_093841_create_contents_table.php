@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('content', function (Blueprint $table) {
+        Schema::create('contents', function (Blueprint $table) {
             //tables for house model
             $table->id();
             $table->enum('type', ['house', 'apartment']);
+            $table->enum('availability', ['available', 'not available']);
             $table->string('address');
             $table->string('city');
             $table->string('state');
             $table->string('zip');
-            $table->enum('availability', ['available', 'not available']);
             $table->decimal('price', 10, 2);
             $table->longText('description')->nullable();
             $table->integer('m2')->unsigned();

@@ -11,7 +11,7 @@ Route::get('/test', [TestController::class, "index"])->name('user.index');
 
 // authentication shit
 Route::post('/auth/login', [AuthController::class, 'login'])->name('user.login');
-
+Route::post('/auth/register', [AuthController::class, 'register'])->name('user.register');
 
 Route::middleware('auth:sanctum')->group(function () {
     // CRUD routes for content (house or apartment)
@@ -20,4 +20,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/content/{id}', [ContentController::class, 'show'])->name('content.show'); // Show specific content
     Route::put('/content/{id}', [ContentController::class, 'update'])->name('content.update'); // Update content
     Route::delete('/content/{id}', [ContentController::class, 'destroy'])->name('content.destroy'); // Delete content
+    
 });
