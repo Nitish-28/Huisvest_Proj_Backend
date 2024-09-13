@@ -10,19 +10,12 @@ Route::get('/test', [TestController::class, "index"])->name('user.index');
 
 // authentication shit
 Route::post('/auth/login', [AuthController::class, 'login'])->name('user.login');
-
+Route::post('/auth/register', [AuthController::class, 'register'])->name('user.register');
 
 Route::middleware('auth:sanctum')->group(function () {
-    // read function
+
     Route::get('/auth/user', [AuthController::class, 'getUser'])->name('user.getUser');
-    
-    // write function
-    Route::post('/auth/user', [AuthController::class, 'storeUser'])->name('user');
-    
-    // update function
-    Route::put('/auth/user/{id}', [AuthController::class, 'updateUser'])->name('user.update');
-    
-    // delete function
-    Route::delete('/auth/user/{id}', [AuthController::class, 'deleteUser'])->name('user.delete');
+    Route::put('/auth/user/{id}', [AuthController::class, 'update'])->name('user.update');
+    Route::delete('/auth/delete', [AuthController::class, 'delete'])->name('user.delete');
     
 });
