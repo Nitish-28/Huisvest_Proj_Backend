@@ -82,11 +82,37 @@ class AuthController extends Controller
             'created_at' => now(),
         ]);
 
-        $this->login(['email' => $request->email, 'password' => $request->password]);
-
         return response()->json([
             'success' => true,
             'user' => $user,
         ]);
+    }
+
+    public function delete(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|integer|exists:users,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first()
+            ], 422);
+        }
+
+        $user = User::find($request->id);
+
+        if ($user) {
+            $user->delete();
+            return response()->json([
+                'success' => true,
+                'message' => 'User deleted successfully',
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'User not found',
+        ], 404);
     }
 }
