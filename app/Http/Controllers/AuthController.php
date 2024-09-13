@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+    //
     // login function give email , password via POST req
+    //
     public function login(Request $request) {
 
         // validate request information
@@ -49,5 +55,38 @@ class AuthController extends Controller
             401
         ]);
         
+    }
+
+    //
+    // user register function
+    //
+    public function register(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:255',
+            'email' => 'required|email:rfc,dns|max:255',
+            'password' => 'required|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false, 
+                'message' => $validator->errors()->first()
+            ], 422);
+        }
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'remember_token' => Str::random(10),
+            'created_at' => now(),
+        ]);
+
+        $this->login(['email' => $request->email, 'password' => $request->password]);
+
+        return response()->json([
+            'success' => true,
+            'user' => $user,
+        ]);
     }
 }
