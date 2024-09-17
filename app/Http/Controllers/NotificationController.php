@@ -9,11 +9,15 @@ class NotificationController extends Controller
 {
     public function sendNotification(Request $request)
     {
+        $request->validate([
+            'message' => 'required|max:255',
+            'receiver_id' => 'required'
+        ]);
         $notification = Notifications::create([
-            'message' => 'New bidder has arrived!',
+            'message' => $request->input('message'),
             'read' => false,
-            'sender_id' => auth()->id(),    // current authenticated user
-            'receiver_id' => $request->input('receiver_id'), // user receiving the notification
+            'sender_id' => auth()->id(), 
+            'receiver_id' => $request->input('receiver_id'),
         ]);
 
         return response()->json(['message' => 'Notification sent successfully']);
