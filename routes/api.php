@@ -28,14 +28,14 @@ Route::middleware('auth:sanctum')->group(function () {
 
 // VERHUURDER, dashboard control
 Route::middleware(['auth:sanctum', 'role:verhuurder|admin'])->group(function () {
+    // test function for role checking (api/debug)
     Route::post('/debug', [TestController::class, 'index']);
 
     //todo: request posted houses
     // give back all houses and listings by logged in user
     Route::post('/d/list', [DashboardController::class, 'list']);
 
-    // CRUD routes for content (house or apartment)
-
+    // CRUD routes for content and listings by verhuurders
     //todo: creating listing
     //todo: delete listing
     Route::post('/d/create', [ContentController::class, 'store'])->name('content.store'); 
