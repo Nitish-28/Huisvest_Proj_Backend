@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->enum('type', ['house', 'apartment']);
-            $table->enum('availability', ['available', 'not available']);
+            $table->boolean('availability');
             $table->string('address');
             $table->string('city');
             $table->string('state');

@@ -19,7 +19,7 @@ Route::post('/auth/register', [AuthController::class, 'register'])->name('user.r
 Route::middleware('auth:sanctum')->group(function () {
     // CRUD routes for content (house or apartment)
     Route::post('/content/create', [ContentController::class, 'store'])->name('content.store'); 
-    Route::put('/content/{id}', [ContentController::class, 'update'])->name('content.update'); 
+    Route::put('/content/{id}', [ContentController::class, 'update'])->name('content.update');
     Route::delete('/content/{id}', [ContentController::class, 'delete'])->name('content.destroy');
 
     // user settings crud etc..

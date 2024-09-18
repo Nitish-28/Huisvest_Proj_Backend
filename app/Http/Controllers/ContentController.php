@@ -39,13 +39,20 @@ class ContentController extends Controller
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
             'zip' => 'required|string|max:10',
-            'availability' => 'required|in:available,not available',
+            'availability' => 'required|boolean',
             'price' => 'required|numeric',
             'm2' => 'required|integer',
             'bedrooms' => 'required|integer',
             'bathrooms' => 'required|integer',
             'image' => 'required|string',
         ]);
+
+        //if state = 'urk' return error
+        if ($request->city == 'Urk') {
+            return response()->json([
+                'success' => false,
+                'message' => 'ga maar weg inteelt' ], 422);
+        }
 
         // If validation fails, return error message
         if ($validator->fails()) {
@@ -100,13 +107,20 @@ class ContentController extends Controller
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
             'zip' => 'required|string|max:10',
-            'availability' => 'required|in:available,not available',
+            'availability' => 'required|boolean',
             'price' => 'required|numeric',
             'm2' => 'required|integer',
             'bedrooms' => 'required|integer',
             'bathrooms' => 'required|integer',
             'image' => 'required|string',
         ]);
+
+        //if state = 'urk' return error
+        if ($request->city == 'Urk') {
+            return response()->json([
+                'success' => false,
+                'message' => 'ga maar weg inteelt' ], 422);
+        }
 
         $content->update($request->all());
         //return json

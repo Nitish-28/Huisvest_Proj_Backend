@@ -16,7 +16,7 @@ class ContentFactory extends Factory
     {
         return [
             'type' => $this->faker->randomElement(['house', 'apartment']),
-            'availability' => $this->faker->randomElement(['available', 'not available']),
+            'availability' => $this->faker->boolean(),
             'address' => $this->faker->streetAddress(),
             'city' => $this->faker->city(),
             'state' => $this->faker->stateAbbr(),
