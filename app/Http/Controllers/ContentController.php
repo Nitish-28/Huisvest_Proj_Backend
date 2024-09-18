@@ -25,7 +25,6 @@ class ContentController extends Controller
     {
         //return json
         return response()->json(['message' => 'Create form']);
-
     }
 
     /**
@@ -33,7 +32,8 @@ class ContentController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(),[
+        // Validate the request data
+        $validator = Validator::make($request->all(), [
             'type' => 'required|in:house,apartment',
             'address' => 'required|string|max:255',
             'city' => 'required|string|max:255',
@@ -46,18 +46,26 @@ class ContentController extends Controller
             'bathrooms' => 'required|integer',
             'image' => 'required|string',
         ]);
+
+        // If validation fails, return error message
         if ($validator->fails()) {
             return response()->json([
-                'success' => false, 
+                'success' => false,
                 'message' => $validator->errors()->first()
             ], 422);
         }
 
-        Content::create($request->all());
-        //return json
-        return response()->json(['message' => 'Content created successfully']);
+        // Merge the authenticated user's ID into the request data
+        $data = $request->all();
+        $data['user_id'] = auth()->user()->id; // Add the user ID
 
+        // Create the content with the merged data
+        Content::create($data);
+
+        // Return success response
+        return response()->json(['message' => 'Content created successfully']);
     }
+
 
     /**
      * Display the specified resource.
@@ -103,7 +111,6 @@ class ContentController extends Controller
         $content->update($request->all());
         //return json
         return response()->json(['message' => 'Content updated successfully']);
-
     }
 
     /**
