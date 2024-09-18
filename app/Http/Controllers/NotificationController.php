@@ -16,7 +16,7 @@ class NotificationController extends Controller
         $notification = Notifications::create([
             'message' => $request->input('message'),
             'read' => false,
-            'sender_id' => auth()->id(), 
+            'sender_id' => auth()->id(),
             'receiver_id' => $request->input('receiver_id'),
         ]);
 
