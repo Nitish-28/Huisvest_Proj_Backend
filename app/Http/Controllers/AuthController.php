@@ -60,12 +60,16 @@ class AuthController extends Controller
     //
     // user register function
     //
+
+    // register 
     public function register(Request $request) {
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:255',
             'email' => 'required|email:rfc,dns|max:255',
             'password' => 'required|max:255',
+            'isSeller' => 'required|boolean'
         ]);
+
 
         if ($validator->fails()) {
             return response()->json([
@@ -81,6 +85,10 @@ class AuthController extends Controller
             'remember_token' => Str::random(10),
             'created_at' => now(),
         ]);
+
+        if ($request->isSeller) {
+            $user->assignRole('verhuurder');
+        }
 
         return response()->json([
             'success' => true,
