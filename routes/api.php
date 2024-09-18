@@ -17,10 +17,6 @@ Route::post('/auth/login', [AuthController::class, 'login'])->name('user.login')
 Route::post('/auth/register', [AuthController::class, 'register'])->name('user.register');
 
 Route::middleware('auth:sanctum')->group(function () {
-    // CRUD routes for content (house or apartment)
-    Route::post('/content/create', [ContentController::class, 'store'])->name('content.store'); 
-    Route::put('/content/{id}', [ContentController::class, 'update'])->name('content.update');
-    Route::delete('/content/{id}', [ContentController::class, 'delete'])->name('content.destroy');
 
     // user settings crud etc..
     Route::delete('/auth/delete', [AuthController::class, 'delete'])->name('user.delete');
@@ -28,7 +24,7 @@ Route::middleware('auth:sanctum')->group(function () {
     //notification routes
     Route::post('/notifications', [NotificationController::class, 'sendNotification']);
     Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
-    
+
     route::post('/bids', [BiddingController::class, 'placeBid']);
 });
 
@@ -44,10 +40,14 @@ Route::middleware(['auth:sanctum', 'role:verhuurder|admin'])->group(function () 
     // CRUD routes for content and listings by verhuurders
     //todo: creating listing
     //todo: delete listing
-    Route::post('/d/create', [ContentController::class, 'store'])->name('content.store'); 
-    Route::put('/d/{id}', [ContentController::class, 'update'])->name('content.update'); 
+    Route::post('/d/create', [ContentController::class, 'store'])->name('content.store');
+    Route::put('/d/{id}', [ContentController::class, 'update'])->name('content.update');
     Route::delete('/d/{id}', [ContentController::class, 'delete'])->name('content.destroy');
 
+    // CRUD routes for content (house or apartment)
+    Route::post('/content/create', [ContentController::class, 'store'])->name('content.store');
+    Route::put('/content/{id}', [ContentController::class, 'update'])->name('content.update');
+    Route::delete('/content/{id}', [ContentController::class, 'delete'])->name('content.destroy');
 });
 
 // guest view
