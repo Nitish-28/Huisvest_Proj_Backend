@@ -35,3 +35,4 @@ class DatabaseSeeder extends Seeder
         Content::factory(25)->create();
     }
 }
+    
