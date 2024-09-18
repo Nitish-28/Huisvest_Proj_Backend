@@ -20,6 +20,12 @@ class Content extends Model
         'm2',
         'bedrooms',
         'bathrooms',
-        'image'
+        'image',
+        'user_id',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

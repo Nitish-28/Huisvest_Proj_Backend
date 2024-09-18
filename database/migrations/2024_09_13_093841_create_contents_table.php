@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('contents', function (Blueprint $table) {
             //tables for house model
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->enum('type', ['house', 'apartment']);
             $table->enum('availability', ['available', 'not available']);
             $table->string('address');

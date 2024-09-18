@@ -29,6 +29,7 @@ class ContentFactory extends Factory
             'image' => $this->faker->imageUrl(),
             'created_at' => now(),
             'updated_at' => now(),
+            'user_id' => $this->faker->numberBetween(1, 4),
         ];
     }
 }
