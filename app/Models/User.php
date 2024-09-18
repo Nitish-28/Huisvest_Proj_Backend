@@ -61,4 +61,16 @@ class User extends Authenticatable
     {
         return $this->hasMany(Content::class);
     }
+
+    // Biddings sent by the user
+    public function sentBids()
+    {
+        return $this->hasMany(Bidding::class, 'sender_id');
+    }
+
+    // Biddings received by the user
+    public function receivedBids()
+    {
+        return $this->hasMany(Bidding::class, 'receiver_id');
+    }
 }

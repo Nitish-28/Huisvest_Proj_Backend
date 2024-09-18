@@ -10,7 +10,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TestController;
-
+use App\Http\Controllers\BiddingController;
 
 // authentication shit
 Route::post('/auth/login', [AuthController::class, 'login'])->name('user.login');
@@ -28,6 +28,8 @@ Route::middleware('auth:sanctum')->group(function () {
     //notification routes
     Route::post('/notifications', [NotificationController::class, 'sendNotification']);
     Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
+    
+    route::post('/bids', [BiddingController::class, 'placeBid']);
 });
 
 // VERHUURDER, dashboard control
