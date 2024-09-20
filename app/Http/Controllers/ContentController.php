@@ -9,9 +9,18 @@ use Illuminate\Support\Facades\Validator;
 class ContentController extends Controller
 {
 
+    // guest functies voor homepage
     public function guest()
     {
-        $contents = Content::select('type', 'availability', 'address', 'city', 'zip', 'price')->paginate(10);
+        $contents = Content::select('type', 'availability', 'address', 'city', 'zip', 'price', 'created_at')->paginate(10);
+        //return json
+        return response()->json($contents);
+    }
+
+    // guest functie gestorteerd op laatst toegevoegd 
+    public function guest_latest()
+    {
+        $contents = Content::select('type', 'availability', 'address', 'city', 'zip', 'price', 'created_at')->orderBy('created_at', 'desc')->paginate(10);
         //return json
         return response()->json($contents);
     }
