@@ -104,15 +104,11 @@ class AuthController extends Controller
         ], 404);
     }
 
-    //Logout method
     public function logout(Request $request)
     {
         // Revoke the user's current token
         $user = Auth::user();
         $user->tokens()->where('id', $request->user()->currentAccessToken()->id)->delete();
-
-        // Delete notifications for the logged-out user
-        Notifications::where('receiver_id', $user->id)->delete();
 
         return response()->json(['message' => 'Logged out successfully']);
     }
