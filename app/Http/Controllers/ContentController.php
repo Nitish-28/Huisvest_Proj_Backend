@@ -51,7 +51,7 @@ class ContentController extends Controller
         if ($request->city == 'Urk') {
             return response()->json([
                 'success' => false,
-                'message' => 'ga maar weg inteelt' ], 422);
+                'message' => 'Oeps! Urk is niet toegestaan' ], 422);
         }
 
         // If validation fails, return error message
