@@ -73,4 +73,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Bidding::class, 'receiver_id');
     }
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+    }
 }

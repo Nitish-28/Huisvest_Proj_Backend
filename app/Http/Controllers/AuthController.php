@@ -5,42 +5,28 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Notifications; // Import Notifications model
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-    //
-    // login function give email , password via POST req
-    //
-    public function login(Request $request) {
-
-        // validate request information
+    public function login(Request $request)
+    {
+        // Validate request information
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        // grab data after validation
-        $data = $request->only('email', 'password');
-
-        // attempt login via sanctum authentication
-        if(Auth::attempt($data)) {
-
-            // if auth is successfull, grab user and save
+        // Attempt login via sanctum authentication
+        if (Auth::attempt($request->only('email', 'password'))) {
             $user = Auth::user();
 
-            if ($user->tokens()->count() > 0) 
-            {
-                $user->tokens()->delete();
-                $token = $user->createToken('Access Token')->plainTextToken;
-            } 
-                // if user has no tokens, create new one
-                else 
-                {
-                    $token = $user->createToken('Access Token')->plainTextToken;
-                }
+            // Delete existing tokens and create a new one
+            $user->tokens()->delete();
+            $token = $user->createToken('Access Token')->plainTextToken;
 
             return response()->json([
                 'success' => true,
@@ -51,18 +37,12 @@ class AuthController extends Controller
 
         return response()->json([
             'success' => false,
-            'message' => 'Unauthorized: Wrong login information',
-            401
-        ]);
-        
+            'message' => 'Unauthorized: Wrong login information'
+        ], 401);
     }
 
-    //
-    // user register function
-    //
-
-    // register 
-    public function register(Request $request) {
+    public function register(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:255',
             'email' => 'required|email:rfc,dns|max:255',
@@ -70,10 +50,9 @@ class AuthController extends Controller
             'isSeller' => 'required|boolean'
         ]);
 
-
         if ($validator->fails()) {
             return response()->json([
-                'success' => false, 
+                'success' => false,
                 'message' => $validator->errors()->first()
             ], 422);
         }
@@ -96,7 +75,8 @@ class AuthController extends Controller
         ]);
     }
 
-    public function delete(Request $request) {
+    public function delete(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'id' => 'required|integer|exists:users,id',
         ]);
@@ -122,5 +102,18 @@ class AuthController extends Controller
             'success' => false,
             'message' => 'User not found',
         ], 404);
+    }
+
+    //Logout method
+    public function logout(Request $request)
+    {
+        // Revoke the user's current token
+        $user = Auth::user();
+        $user->tokens()->where('id', $request->user()->currentAccessToken()->id)->delete();
+
+        // Delete notifications for the logged-out user
+        Notifications::where('receiver_id', $user->id)->delete();
+
+        return response()->json(['message' => 'Logged out successfully']);
     }
 }

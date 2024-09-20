@@ -13,6 +13,7 @@ class NotificationController extends Controller
             'message' => 'required|max:255',
             'receiver_id' => 'required'
         ]);
+
         $notification = Notifications::create([
             'message' => $request->input('message'),
             'read' => false,
@@ -22,12 +23,33 @@ class NotificationController extends Controller
 
         return response()->json(['message' => 'Notification sent successfully']);
     }
+
     public function markAsRead($notificationId)
     {
         $notification = Notifications::find($notificationId);
+        
+        if (!$notification) {
+            return response()->json(['message' => 'Notification not found'], 404);
+        }
+
         $notification->read = true;
         $notification->save();
 
         return response()->json(['message' => 'Notification marked as read']);
+    }
+
+    // Method to send favorite notifications
+    public function sendFavoriteNotification($content, $action)
+    {
+        $message = $action === 'added'
+            ? "You added {$content->address} to your favorites."
+            : "You removed {$content->address} from your favorites.";
+
+        Notifications::create([
+            'message' => $message,
+            'read' => false,
+            'sender_id' => auth()->id(),
+            'receiver_id' => auth()->id(), // Assuming the user receives their own notifications
+        ]);
     }
 }

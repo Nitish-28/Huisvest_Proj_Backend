@@ -11,6 +11,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\BiddingController;
+use App\Http\Controllers\FavoriteController;
+
 
 // authentication shit
 Route::post('/auth/login', [AuthController::class, 'login'])->name('user.login');
@@ -26,6 +28,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
 
     route::post('/bids', [BiddingController::class, 'placeBid']);
+
+    Route::post('/content/{id}/favorite', [FavoriteController::class, 'add'])->name('content.favorite');
+    Route::delete('/content/{id}/favorite', [FavoriteController::class, 'remove'])->name('content.unfavorite');
+    Route::get('/favorites', [FavoriteController::class, 'index'])->name('content.favorites');
+
+    //logout function
+    Route::post('/auth/logout', [AuthController::class, 'logout'])->name('user.logout');
+
 });
 
 // VERHUURDER, dashboard control
