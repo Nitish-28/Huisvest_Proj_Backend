@@ -8,28 +8,14 @@ use Illuminate\Support\Facades\Validator;
 
 class ContentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+
+    public function guest()
     {
-        $contents = Content::all();
+        $contents = Content::select('type', 'availability', 'address', 'city', 'zip', 'price')->paginate(10);
         //return json
         return response()->json($contents);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //return json
-        return response()->json(['message' => 'Create form']);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         // Validate the request data

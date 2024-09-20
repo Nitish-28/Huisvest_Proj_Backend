@@ -34,6 +34,8 @@ Route::middleware('auth:sanctum')->group(function () {
     //logout function
     Route::post('/auth/logout', [AuthController::class, 'logout'])->name('user.logout');
 
+    // show details of content
+    Route::get('/content/{id}', [ContentController::class, 'show'])->name('content.show');
 });
 
 // VERHUURDER, dashboard control
@@ -51,5 +53,5 @@ Route::middleware(['auth:sanctum', 'role:verhuurder|admin'])->group(function () 
 });
 
 // guest view
-Route::get('/content', [ContentController::class, 'index'])->name('content.index');
-Route::get('/content/{id}', [ContentController::class, 'show'])->name('content.show');
+Route::get('/content', [ContentController::class, 'guest'])->name('content.index');
+
