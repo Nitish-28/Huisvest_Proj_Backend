@@ -41,7 +41,6 @@ class ContentController extends Controller
             'bathrooms' => 'required|integer',
             'image' => 'required|string',
         ]);
-
         //if state = 'urk' return error
         if ($request->city == 'Urk') {
             return response()->json([
