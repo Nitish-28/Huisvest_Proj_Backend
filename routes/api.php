@@ -36,6 +36,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // show details of content
     Route::post('/content/{id}', [ContentController::class, 'show'])->name('content.show');
+
+    Route::get('/auth/validate-token', [AuthController::class, 'validateToken'])->name('user.validateToken');
+
 });
 
 // VERHUURDER, dashboard control

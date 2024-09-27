@@ -111,4 +111,21 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Logged out successfully']);
     }
+
+    public function validateToken(Request $request)
+{
+    // Check if the user is authenticated via the current token
+    if (Auth::check()) {
+        return response()->json([
+            'success' => true,
+            'message' => 'Token is valid',
+            'user' => Auth::user()
+        ]);
+    }
+
+    return response()->json([
+        'success' => false,
+        'message' => 'Token is invalid or expired'
+    ], 401);
+}
 }
