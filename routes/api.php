@@ -30,7 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/content/{id}/favorite', [FavoriteController::class, 'add'])->name('content.favorite');
     Route::delete('/content/{id}/favorite', [FavoriteController::class, 'remove'])->name('content.unfavorite');
     Route::get('/favorites', [FavoriteController::class, 'index'])->name('content.favorites');
-
+    
     //logout function
     Route::post('/auth/logout', [AuthController::class, 'logout'])->name('user.logout');
 
