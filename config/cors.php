@@ -1,34 +1,12 @@
 <?php
 
 return [
-
-    /*
-    |--------------------------------------------------------------------------
-    | Cross-Origin Resource Sharing (CORS) Configuration
-    |--------------------------------------------------------------------------
-    |
-    | Here you may configure your settings for cross-origin resource sharing
-    | or "CORS". This determines what cross-origin operations may execute
-    | in web browsers. You are free to adjust these settings as needed.
-    |
-    | To learn more: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
-    |
-    */
-
-    'paths' => ['*'],
-
-    'allowed_methods' => ['*'],
-
-    'allowed_origins' => [env('FRONTEND_URL', 'http://localhost:3000')],
-
+    'paths' => ['api/*'], // Adjust this to match your API routes
+    'allowed_methods' => ['*'], // Allow all methods or specify which ones
+    'allowed_origins' => ['http://localhost:3000', 'https://chrisouboter.com', 'http://127.0.0.1:3000'], // Add the appropriate URLs
     'allowed_origins_patterns' => [],
-
-    'allowed_headers' => ['*'],
-
+    'allowed_headers' => ['*'], // Allow all headers or specify which ones
     'exposed_headers' => [],
-
     'max_age' => 0,
-
     'supports_credentials' => true,
-
 ];
