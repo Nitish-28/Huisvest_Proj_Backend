@@ -56,7 +56,7 @@ Route::middleware(['auth:sanctum', 'role:verhuurder|admin'])->group(function () 
 });
 
 // guest view
-Route::post('/content', [ContentController::class, 'guest'])->name('content.index');
-Route::post('/content-latest', [ContentController::class, 'guest_latest'])->name('content.latest');
+Route::get('/content', [ContentController::class, 'guest'])->name('content.index');
+Route::get('/content-latest', [ContentController::class, 'guest_latest'])->name('content.latest');
 
 
