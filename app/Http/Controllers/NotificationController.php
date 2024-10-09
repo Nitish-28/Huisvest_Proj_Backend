@@ -52,4 +52,11 @@ class NotificationController extends Controller
             'receiver_id' => auth()->id(), // Assuming the user receives their own notifications
         ]);
     }
+    //method to show notificatons
+    public function showNotifications()
+    {
+        $notifications = Notifications::where('receiver_id', auth()->id())->get();
+
+        return response()->json($notifications);
+    }
 }

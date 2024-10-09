@@ -24,6 +24,7 @@ Route::middleware('auth:sanctum')->group(function () {
     //notification routes
     Route::post('/notifications', [NotificationController::class, 'sendNotification']);
     Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
+    Route::get('/notifications', [NotificationController::class, 'showNotifications']);
 
     route::post('/bids', [BiddingController::class, 'placeBid']);
 
