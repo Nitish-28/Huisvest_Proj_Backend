@@ -34,7 +34,11 @@ class ContentController extends Controller
     $contents = $query->select('id', 'type', 'availability', 'address', 'city', 'zip', 'price', 'created_at')->paginate(10);
 
     // Return JSON response
-    return response()->json($contents);
+    return response()->json([
+        'data' => $contents->items(),
+        'total' => $contents->total(),
+        'last_page' => $contents->lastPage(),
+    ]);
 }
 
     // guest functie gestorteerd op laatst toegevoegd 
