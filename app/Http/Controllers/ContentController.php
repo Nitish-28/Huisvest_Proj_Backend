@@ -31,6 +31,15 @@ class ContentController extends Controller
         $query->where('price', '<=', $request->price_max);
     }
 
+    if ($request->has('search')) {
+        $searchTerm = $request->search;
+        $query->where(function ($q) use ($searchTerm) {
+            $q->where('zip', 'like', '%' . $searchTerm . '%')
+              ->orWhere('city', 'like', '%' . $searchTerm . '%')
+              ->orWhere('address', 'like', '%' . $searchTerm . '%');
+        });
+    }
+
     $contents = $query->select('id', 'type', 'availability', 'address', 'city', 'zip', 'price', 'created_at')->paginate(10);
 
     // Return JSON response
