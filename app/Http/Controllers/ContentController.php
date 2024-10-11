@@ -10,12 +10,29 @@ class ContentController extends Controller
 {
 
     // guest functies voor homepage
-    public function guest()
-    {
-        $contents = Content::select('id', 'type', 'availability', 'address', 'city', 'zip', 'price', 'created_at')->paginate(10);
-        //return json
-        return response()->json($contents);
+    public function guest(Request $request)
+{
+    $query = Content::query();
+
+    // Apply filters if provided in the request
+    if ($request->has('type') && $request->type !== 'All') {
+        $query->where('type', $request->type);
     }
+    if ($request->has('city')) {
+        $query->where('city', 'like', '%' . $request->city . '%');
+    }
+    if ($request->has('price_min')) {
+        $query->where('price', '>=', $request->price_min);
+    }
+    if ($request->has('price_max')) {
+        $query->where('price', '<=', $request->price_max);
+    }
+
+    $contents = $query->select('id', 'type', 'availability', 'address', 'city', 'zip', 'price', 'created_at')->paginate(10);
+
+    // Return JSON response
+    return response()->json($contents);
+}
 
     // guest functie gestorteerd op laatst toegevoegd 
     public function guest_latest()
