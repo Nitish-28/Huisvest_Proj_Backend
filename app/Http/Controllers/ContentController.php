@@ -18,6 +18,9 @@ class ContentController extends Controller
     if ($request->has('type') && $request->type !== 'All') {
         $query->where('type', $request->type);
     }
+    if ($request->has('availability') && $request->availability !== "All") {
+        $query->where('availability', $request->availability);
+    }
     if ($request->has('city')) {
         $query->where('city', 'like', '%' . $request->city . '%');
     }
