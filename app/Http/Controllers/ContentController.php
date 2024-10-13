@@ -14,6 +14,14 @@ class ContentController extends Controller
 {
     $query = Content::query();
 
+    if ($request->has('search')) {
+        $searchTerm = $request->search;
+        $query->where(function ($q) use ($searchTerm) {
+            $q->where('zip', 'like', '%' . $searchTerm . '%')
+              ->orWhere('city', 'like', '%' . $searchTerm . '%')
+              ->orWhere('address', 'like', '%' . $searchTerm . '%');
+        });
+    }
     // Apply filters if provided in the request
     if ($request->has('type') && $request->type !== 'All') {
         $query->where('type', $request->type);
@@ -30,17 +38,16 @@ class ContentController extends Controller
     if ($request->has('price_max')) {
         $query->where('price', '<=', $request->price_max);
     }
-
-    if ($request->has('search')) {
-        $searchTerm = $request->search;
-        $query->where(function ($q) use ($searchTerm) {
-            $q->where('zip', 'like', '%' . $searchTerm . '%')
-              ->orWhere('city', 'like', '%' . $searchTerm . '%')
-              ->orWhere('address', 'like', '%' . $searchTerm . '%');
-        });
+    if ($request->has('sort')) {
+        if ($request->sort === 'asc') {
+            $query->orderBy('price', 'asc');
+        } elseif ($request->sort === 'desc') {
+            $query->orderBy('price', 'desc');
+        }
     }
+    
 
-    $contents = $query->select('id', 'type', 'availability', 'address', 'city', 'zip', 'price', 'created_at')->paginate(10);
+    $contents = $query->select('id', 'type', 'availability', 'address', 'city', 'zip', 'price', 'bedrooms', 'm2', 'bathrooms', 'created_at')->paginate(10);
 
     // Return JSON response
     return response()->json([
