@@ -14,14 +14,7 @@ class ContentController extends Controller
 {
     $query = Content::query();
 
-    if ($request->has('search')) {
-        $searchTerm = $request->search;
-        $query->where(function ($q) use ($searchTerm) {
-            $q->where('zip', 'like', '%' . $searchTerm . '%')
-              ->orWhere('city', 'like', '%' . $searchTerm . '%')
-              ->orWhere('address', 'like', '%' . $searchTerm . '%');
-        });
-    }
+    
     // Apply filters if provided in the request
     if ($request->has('type') && $request->type !== 'All') {
         $query->where('type', $request->type);
@@ -39,13 +32,24 @@ class ContentController extends Controller
         $query->where('price', '<=', $request->price_max);
     }
     if ($request->has('sort')) {
-        if ($request->sort === 'asc') {
+        if ($request->sort === 'up') {
             $query->orderBy('price', 'asc');
-        } elseif ($request->sort === 'desc') {
+        } elseif ($request->sort === 'down') {
             $query->orderBy('price', 'desc');
         }
+
+        
     }
-    
+
+    if ($request->has('search')) {
+        $searchTerm = $request->search;
+        $query->where(function ($q) use ($searchTerm) {
+            $q->where('zip', 'like', '%' . $searchTerm . '%')
+              ->orWhere('city', 'like', '%' . $searchTerm . '%')
+              ->orWhere('address', 'like', '%' . $searchTerm . '%');
+        });
+    }
+    \Log::info($query->toSql(), $query->getBindings());
 
     $contents = $query->select('id', 'type', 'availability', 'address', 'city', 'zip', 'price', 'bedrooms', 'm2', 'bathrooms', 'created_at')->paginate(10);
 
