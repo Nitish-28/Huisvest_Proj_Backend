@@ -32,11 +32,13 @@ class ContentController extends Controller
         $query->where('price', '<=', $request->price_max);
     }
     if ($request->has('sort')) {
-        if ($request->sort === 'asc') {
+        if ($request->sort === 'up') {
             $query->orderBy('price', 'asc');
-        } elseif ($request->sort === 'desc') {
+        } elseif ($request->sort === 'down') {
             $query->orderBy('price', 'desc');
         }
+
+        
     }
     if ($request->has('search')) {
         $searchTerm = $request->search;
