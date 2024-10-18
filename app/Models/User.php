@@ -75,7 +75,7 @@ class User extends Authenticatable
     }
 
     public function favorites()
-    {
-        return $this->hasMany(Favorite::class);
-    }
+{
+    return $this->belongsToMany(Content::class, 'favorites', 'user_id', 'content_id');
+}
 }

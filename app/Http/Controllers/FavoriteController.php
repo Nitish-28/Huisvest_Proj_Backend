@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Favorite;
 use App\Models\Content;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class FavoriteController extends Controller
 {
@@ -14,65 +15,25 @@ class FavoriteController extends Controller
         $this->notificationController = $notificationController;
     }
 
-    public function index()
+    public function save($id)
     {
-        $favorites = auth()->user()->favorites()->with('content')->get();
-
-        return response()->json([
-            'success' => true,
-            'favorites' => $favorites
-        ]);
+        $user = Auth::user();
+        $user->favorites()->attach($id);
+        return response()->json(['message' => 'House saved successfully'], 200);
+    }
+    
+    public function unsave($id)
+    {
+        $user = Auth::user();
+        $user->favorites()->detach($id);
+        return response()->json(['message' => 'House unsaved successfully'], 200);
+    }
+    
+    public function getSavedHouses()
+    {
+        $user = Auth::user();
+        $houses = $user->favorites()->get();
+        return response()->json($houses);
     }
 
-    public function add($id)
-    {
-        $content = Content::findOrFail($id);
-
-        // Check if it's already favorited
-        $exists = auth()->user()->favorites()->where('content_id', $id)->exists();
-        if ($exists) {
-            return response()->json([
-                'success' => false,
-                'message' => 'This property is already in your favorites'
-            ], 409);
-        }
-
-        // Create a new favorite
-        Favorite::create([
-            'user_id' => auth()->user()->id,
-            'content_id' => $content->id
-        ]);
-
-        // Send notification for adding to favorites
-        $this->notificationController->sendFavoriteNotification($content, 'added');
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Property added to favorites'
-        ]);
-    }
-
-    public function remove($id)
-    {
-        $content = Content::findOrFail($id);
-
-        // Remove the favorite if it exists
-        $favorite = auth()->user()->favorites()->where('content_id', $id)->first();
-        if (!$favorite) {
-            return response()->json([
-                'success' => false,
-                'message' => 'This property is not in your favorites'
-            ], 404);
-        }
-
-        $favorite->delete();
-
-        // Send notification for removing from favorites
-        $this->notificationController->sendFavoriteNotification($content, 'removed');
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Property removed from favorites'
-        ]);
-    }
 }

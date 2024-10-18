@@ -18,6 +18,10 @@ Route::post('/auth/register', [AuthController::class, 'register'])->name('user.r
 
 Route::middleware('auth:sanctum')->group(function () {
 
+    Route::post('/fav/save/{id}', [FavoriteController::class, 'save']);
+    Route::post('/fav/remove/{id}', [FavoriteController::class, 'unsave']);
+    Route::get('/fav/saves', [FavoriteController::class, 'getSavedHouses']);
+
     // user settings crud etc..
     Route::delete('/auth/delete', [AuthController::class, 'delete'])->name('user.delete');
 
@@ -27,10 +31,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/notifications', [NotificationController::class, 'showNotifications']);
 
     route::post('/bids', [BiddingController::class, 'placeBid']);
-
-    Route::post('/content/{id}/favorite', [FavoriteController::class, 'add'])->name('content.favorite');
-    Route::delete('/content/{id}/favorite', [FavoriteController::class, 'remove'])->name('content.unfavorite');
-    Route::get('/favorites', [FavoriteController::class, 'index'])->name('content.favorites');
     
     //logout function
     Route::post('/auth/logout', [AuthController::class, 'logout'])->name('user.logout');
