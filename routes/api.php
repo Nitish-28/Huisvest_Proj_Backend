@@ -43,10 +43,10 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 // VERHUURDER, dashboard control
-Route::middleware(['auth:sanctum', 'role:verhuurder|admin'])->group(function () {
+Route::middleware(['auth:sanctum'])->group(function () {
     // test function for role checking (api/debug)
     Route::post('/debug', [TestController::class, 'index']);
-
+    
     // give back all houses and listings by logged in user
     Route::post('/d/list', [DashboardController::class, 'list']);
 

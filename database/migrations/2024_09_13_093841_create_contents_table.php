@@ -12,20 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('contents', function (Blueprint $table) {
-            //tables for house model
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->enum('type', ['house', 'apartment']);
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Ensure user_id column exists
+            $table->string('type');
             $table->boolean('availability');
             $table->string('address');
             $table->string('city');
             $table->string('state');
             $table->string('zip');
             $table->decimal('price', 10, 2);
-            $table->longText('description')->nullable();
-            $table->integer('m2')->unsigned();
-            $table->integer('bedrooms')->unsigned();
-            $table->integer('bathrooms')->unsigned();
+            $table->text('description')->nullable();
+            $table->integer('m2');
+            $table->integer('bedrooms');
+            $table->integer('bathrooms');
             $table->string('image');
             $table->timestamps();
         });

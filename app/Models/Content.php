@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Content extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'type',
         'availability',
@@ -21,7 +22,7 @@ class Content extends Model
         'bedrooms',
         'bathrooms',
         'image',
-        'user_id',
+        'user_id', // <-- Ensure 'user_id' is included here
     ];
 
     public function user()
