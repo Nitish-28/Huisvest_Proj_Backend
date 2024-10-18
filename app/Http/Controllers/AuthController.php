@@ -113,19 +113,84 @@ class AuthController extends Controller
     }
 
     public function validateToken(Request $request)
-{
-    // Check if the user is authenticated via the current token
-    if (Auth::check()) {
+    {
+        // Check if the user is authenticated via the current token
+        if (Auth::check()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Token is valid',
+                'user' => Auth::user()
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Token is invalid or expired'
+        ], 401);
+    }
+    public function update(Request $request)
+    {
+        $request->validate([
+            'name' => 'sometimes|required|max:255',
+            'email' => 'sometimes|required|email|max:255',
+            'password' => 'sometimes|required|max:255',
+            'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048', // Example validation for image
+        ]);
+
+        $user = Auth::user();
+
+        if ($request->has('name')) {
+            $user->name = $request->name;
+        }
+
+        if ($request->has('email')) {
+            $user->email = $request->email;
+        }
+
+        if ($request->has('password')) {
+            $user->password = Hash::make($request->password);
+        }
+
+        if ($request->hasFile('image')) {
+            // Handle image upload (save the image, update the user's profile picture link, etc.)
+        }
+
+        $user->save();
+
+        return response()->json(['success' => true, 'user' => $user]);
+    }
+    public function getUserData(Request $request)
+    {
+        $user = $request->user();
+
         return response()->json([
             'success' => true,
-            'message' => 'Token is valid',
-            'user' => Auth::user()
+            'user' => [
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->getRoleNames()->first(),
+                'created_at' => $user->created_at->toDateString(),
+            ],
         ]);
     }
 
-    return response()->json([
-        'success' => false,
-        'message' => 'Token is invalid or expired'
-    ], 401);
-}
+    // Add this method in AuthController
+    public function updateUserData(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+        ]);
+
+        $user = $request->user();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User data updated successfully',
+            'user' => $user,
+        ]);
+    }
 }

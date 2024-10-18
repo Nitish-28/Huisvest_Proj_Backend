@@ -39,6 +39,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/content/{id}', [ContentController::class, 'show'])->name('content.show');
 
     Route::get('/auth/validate-token', [AuthController::class, 'validateToken'])->name('user.validateToken');
+    
+    Route::get('/auth/user', [AuthController::class, 'getUserData']);
+    Route::put('/auth/user', [AuthController::class, 'updateUserData']);
+
+
 
 });
 
@@ -54,6 +59,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/d/create', [ContentController::class, 'store'])->name('content.store');
     Route::put('/d/{id}', [ContentController::class, 'update'])->name('content.update');
     Route::delete('/d/{id}', [ContentController::class, 'delete'])->name('content.destroy');
+    Route::post('/auth/update', [AuthController::class, 'update'])->name('user.update');
+
 });
 
 // guest view
