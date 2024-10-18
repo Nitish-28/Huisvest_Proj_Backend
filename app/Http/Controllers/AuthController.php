@@ -187,6 +187,8 @@ class AuthController extends Controller
     public function getUserData(Request $request)
     {
         $user = $request->user();
+        //return user
+        return response()->json(['success' => true, 'user' => $user]);
 
         return response()->json([
             'success' => true,
@@ -195,6 +197,8 @@ class AuthController extends Controller
                 'email' => $user->email,
                 'role' => $user->getRoleNames()->first(),
                 'created_at' => $user->created_at->toDateString(),
+                //profile picture
+                'profile_picture' => asset($user->profile_picture),
             ],
         ]);
     }
