@@ -24,10 +24,6 @@ class AuthController extends Controller
         $request->validate([
             'profile_picture' => 'required|image|mimes:jpg,jpeg,png',
         ]);
-
-        
-
-
         $user = auth()->user();
 
         if ($user->profile_picture) {
@@ -36,7 +32,6 @@ class AuthController extends Controller
                 unlink($oldImagePath);
             }
         }
-
         $imageName = time().'.'.$request->profile_picture->extension();
 
         // Store the file in the 'public/profile_pictures' directory
