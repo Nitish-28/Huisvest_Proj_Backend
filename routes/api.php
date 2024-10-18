@@ -41,14 +41,19 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/content/{id}', [ContentController::class, 'show'])->name('content.show');
 
     Route::get('/auth/validate-token', [AuthController::class, 'validateToken'])->name('user.validateToken');
+    
+    Route::get('/auth/user', [AuthController::class, 'getUserData']);
+    Route::put('/auth/user', [AuthController::class, 'updateUserData']);
+
+
 
 });
 
 // VERHUURDER, dashboard control
-Route::middleware(['auth:sanctum', 'role:verhuurder|admin'])->group(function () {
+Route::middleware(['auth:sanctum'])->group(function () {
     // test function for role checking (api/debug)
     Route::post('/debug', [TestController::class, 'index']);
-
+    
     // give back all houses and listings by logged in user
     Route::post('/d/list', [DashboardController::class, 'list']);
 
@@ -56,6 +61,8 @@ Route::middleware(['auth:sanctum', 'role:verhuurder|admin'])->group(function () 
     Route::post('/d/create', [ContentController::class, 'store'])->name('content.store');
     Route::put('/d/{id}', [ContentController::class, 'update'])->name('content.update');
     Route::delete('/d/{id}', [ContentController::class, 'delete'])->name('content.destroy');
+    Route::post('/auth/update', [AuthController::class, 'update'])->name('user.update');
+
 });
 
 // guest view
