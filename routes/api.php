@@ -17,6 +17,8 @@ Route::post('/auth/login', [AuthController::class, 'login'])->name('user.login')
 Route::post('/auth/register', [AuthController::class, 'register'])->name('user.register');
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/pp/save', [AuthController::class, 'uploadProfilePicture']);
+    Route::post('/pp/get', [AuthController::class, 'getUserProfile']);
 
     Route::post('/fav/save/{id}', [FavoriteController::class, 'save']);
     Route::post('/fav/remove/{id}', [FavoriteController::class, 'unsave']);

@@ -12,6 +12,31 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+    public function getUserProfile()
+{
+        $user = auth()->user();
+        $user->profile_picture_url = asset($user->profile_picture);
+
+        return response()->json($user);
+}
+    public function uploadProfilePicture(Request $request)
+    {
+        $request->validate([
+            'profile_picture' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        $user = auth()->user();
+        $imageName = time().'.'.$request->profile_picture->extension();
+
+        // Store the file in the 'public/profile_pictures' directory
+        $request->profile_picture->storeAs('public/profile_pictures', $imageName);
+
+        // Optionally save the image path in the user profile
+        $user->profile_picture = 'storage/profile_pictures/' . $imageName;
+        $user->save();
+
+        return response()->json(['message' => 'Profile picture uploaded successfully', 'path' => $user->profile_picture]);
+    }
     public function login(Request $request)
     {
         // Validate request information
