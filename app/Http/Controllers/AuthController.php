@@ -22,10 +22,21 @@ class AuthController extends Controller
     public function uploadProfilePicture(Request $request)
     {
         $request->validate([
-            'profile_picture' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            'profile_picture' => 'required|image|mimes:jpg,jpeg,png',
         ]);
 
+        
+
+
         $user = auth()->user();
+
+        if ($user->profile_picture) {
+            $oldImagePath = public_path($user->profile_picture);
+            if (file_exists($oldImagePath)) {
+                unlink($oldImagePath);
+            }
+        }
+
         $imageName = time().'.'.$request->profile_picture->extension();
 
         // Store the file in the 'public/profile_pictures' directory
