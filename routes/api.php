@@ -39,7 +39,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/notifications', [NotificationController::class, 'showNotifications']);
 
     route::post('/bids', [BiddingController::class, 'placeBid']);
-    
+
     //logout function
     Route::post('/auth/logout', [AuthController::class, 'logout'])->name('user.logout');
 
@@ -47,19 +47,18 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/content/{id}', [ContentController::class, 'show'])->name('content.show');
 
     Route::get('/auth/validate-token', [AuthController::class, 'validateToken'])->name('user.validateToken');
-    
+
     Route::get('/auth/user', [AuthController::class, 'getUserData']);
     Route::put('/auth/user', [AuthController::class, 'updateUserData']);
-
-
-
 });
+Route::middleware('auth:sanctum')->post('/auth/update-profile', [AuthController::class, 'updateProfile']);
+
 
 // VERHUURDER, dashboard control
 Route::middleware(['auth:sanctum'])->group(function () {
     // test function for role checking (api/debug)
     Route::post('/debug', [TestController::class, 'index']);
-    
+
     // give back all houses and listings by logged in user
     Route::post('/d/list', [DashboardController::class, 'list']);
 
@@ -68,11 +67,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/d/{id}', [ContentController::class, 'update'])->name('content.update');
     Route::delete('/d/{id}', [ContentController::class, 'delete'])->name('content.destroy');
     Route::post('/auth/update', [AuthController::class, 'update'])->name('user.update');
-
 });
 
 // guest view
 Route::get('/content', [ContentController::class, 'guest'])->name('content.index');
 Route::get('/content-latest', [ContentController::class, 'guest_latest'])->name('content.latest');
-
-
