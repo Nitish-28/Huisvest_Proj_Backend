@@ -11,10 +11,16 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\BiddingController;
 use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\MailController;
+
 
 // authentication shit
 Route::post('/auth/login', [AuthController::class, 'login'])->name('user.login');
 Route::post('/auth/register', [AuthController::class, 'register'])->name('user.register');
+
+Route::get('/mail/send', [MailController::class, 'send'])->name('mail.send'); 
+Route::get('/mail/verify', [MailController::class, 'verify'])->name('mail.verify'); 
+
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/pp/save', [AuthController::class, 'uploadProfilePicture']);
