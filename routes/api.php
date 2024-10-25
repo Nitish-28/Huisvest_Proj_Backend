@@ -3,7 +3,6 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-// controllers
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\DashboardController;
@@ -14,7 +13,7 @@ use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\MailController;
 
 
-// authentication shit
+// authentication 
 Route::post('/auth/login', [AuthController::class, 'login'])->name('user.login');
 Route::post('/auth/register', [AuthController::class, 'register'])->name('user.register');
 
@@ -43,7 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
     //logout function
     Route::post('/auth/logout', [AuthController::class, 'logout'])->name('user.logout');
 
-    // show details of content
+    //content details
     Route::post('/content/{id}', [ContentController::class, 'show'])->name('content.show');
 
     Route::get('/auth/validate-token', [AuthController::class, 'validateToken'])->name('user.validateToken');

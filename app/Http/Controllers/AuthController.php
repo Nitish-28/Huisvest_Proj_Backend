@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use App\Models\Notifications; // Import Notifications model
+use App\Models\Notifications;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
@@ -34,10 +34,10 @@ class AuthController extends Controller
         }
         $imageName = time() . '.' . $request->profile_picture->extension();
 
-        // Store the file in the 'public/profile_pictures' directory
+        // Store file in 'public/profile_pictures'
         $request->profile_picture->storeAs('public/profile_pictures', $imageName);
 
-        // Optionally save the image path in the user profile
+        // Optionally save image path in user profile
         $user->profile_picture = 'storage/profile_pictures/' . $imageName;
         $user->save();
 
@@ -45,17 +45,15 @@ class AuthController extends Controller
     }
     public function login(Request $request)
     {
-        // Validate request information
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        // Attempt login via sanctum authentication
         if (Auth::attempt($request->only('email', 'password'))) {
             $user = Auth::user();
 
-            // Delete existing tokens and create a new one
+            // Delete token + create a new one
             $user->tokens()->delete();
             $token = $user->createToken('Access Token')->plainTextToken;
 
@@ -145,7 +143,7 @@ class AuthController extends Controller
 
     public function validateToken(Request $request)
     {
-        // Check if the user is authenticated via the current token
+        // Check if user is authenticated with current token
         if (Auth::check()) {
             return response()->json([
                 'success' => true,
@@ -183,7 +181,6 @@ class AuthController extends Controller
         }
 
         if ($request->hasFile('image')) {
-            // Handle image upload (save the image, update the user's profile picture link, etc.)
         }
 
         $user->save();
@@ -193,11 +190,9 @@ class AuthController extends Controller
     public function getUserData(Request $request)
     {
         $user = $request->user();
-        //return user
         return response()->json(['success' => true, 'user' => $user]);
     }
 
-    // Add this method in AuthController
     public function updateProfile(Request $request)
     {
         $request->validate([
@@ -209,7 +204,6 @@ class AuthController extends Controller
 
         $user = Auth::user();
 
-        // Update user data
         if ($request->has('name')) {
             $user->name = $request->name;
         }
@@ -222,7 +216,6 @@ class AuthController extends Controller
             $user->password = Hash::make($request->password);
         }
 
-        // Handle profile picture upload
         if ($request->hasFile('profile_picture')) {
             if ($user->profile_picture) {
                 $oldImagePath = public_path($user->profile_picture);
