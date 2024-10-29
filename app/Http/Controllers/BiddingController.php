@@ -10,7 +10,7 @@ class BiddingController extends Controller
     public function placeBid(Request $request)
     {
 
-        // Validate the request
+        //validate request
         $data = $request->validate([
             'receiver_id' => 'required|exists:users,id',
             'bid' => 'required',
@@ -18,14 +18,14 @@ class BiddingController extends Controller
         ]);
         
 
-        // Create the bid
+        //create bid
         $bidding = Bidding::create([
             'sender_id' => Auth::id(),
             'receiver_id' => $data['receiver_id'],
             'bid' => $data['bid'],
         ]);
 
-        // Notify the receiver
+        //notify receiver
         $bidding->notifyReceiver();
 
         return response()->json(['message' => 'Bid placed and notification sent']);

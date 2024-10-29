@@ -7,6 +7,7 @@ use App\Models\Notifications;
 
 class NotificationController extends Controller
 {
+    //send noti
     public function sendNotification(Request $request)
     {
         $request->validate([
@@ -24,6 +25,7 @@ class NotificationController extends Controller
         return response()->json(['message' => 'Notification sent successfully']);
     }
 
+    //read noti
     public function markAsRead($notificationId)
     {
         $notification = Notifications::find($notificationId);
@@ -38,7 +40,7 @@ class NotificationController extends Controller
         return response()->json(['message' => 'Notification marked as read']);
     }
 
-    // Method to send favorite notifications
+    //send favorite notifications
     public function sendFavoriteNotification($content, $action)
     {
         $message = $action === 'added'
@@ -52,7 +54,7 @@ class NotificationController extends Controller
             'receiver_id' => auth()->id(), // Assuming the user receives their own notifications
         ]);
     }
-    //method to show notificatons
+    //show notificatons
     public function showNotifications()
     {
         $notifications = Notifications::where('receiver_id', auth()->id())->get();
