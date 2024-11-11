@@ -47,6 +47,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/auth/validate-token', [AuthController::class, 'validateToken'])->name('user.validateToken');
 
+    Route::post('/user/totalviews', [ContentController::class, 'getTotalViewsForUser']);
+
+
     Route::get('/auth/user', [AuthController::class, 'getUserData']);
     Route::put('/auth/user', [AuthController::class, 'updateUserData']);
 });
@@ -60,6 +63,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // give back all houses and listings by logged in user
     Route::post('/d/list', [DashboardController::class, 'list']);
+
+
+
 
     // CRUD routes for content and listings by verhuurders
     Route::post('/d/create', [ContentController::class, 'store'])->name('content.store');

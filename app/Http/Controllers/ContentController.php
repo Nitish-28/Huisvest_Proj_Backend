@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Content;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ContentController extends Controller
 {
@@ -114,6 +116,13 @@ class ContentController extends Controller
         ], 201);
     }
 
+    public function getTotalViewsForUser()
+    {
+        $user = Auth::user();
+        $totalViews = Content::where('user_id', $user->id)->sum('views');
+
+        return $totalViews;
+    }
 
     /**
      * Display the specified resource.
@@ -121,6 +130,7 @@ class ContentController extends Controller
     public function show(string $id)
     {
         $content = Content::findOrFail($id);
+        $content->increment('views');
         //return json
         return response()->json($content);
     }
