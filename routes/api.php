@@ -43,37 +43,30 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/auth/logout', [AuthController::class, 'logout'])->name('user.logout');
 
     //content details
-    Route::post('/content/{id}', [ContentController::class, 'show'])->name('content.show');
 
     Route::get('/auth/validate-token', [AuthController::class, 'validateToken'])->name('user.validateToken');
 
     Route::post('/user/totalviews', [ContentController::class, 'getTotalViewsForUser']);
 
-
     Route::get('/auth/user', [AuthController::class, 'getUserData']);
     Route::put('/auth/user', [AuthController::class, 'updateUserData']);
+
+    // VERHUURDER, dashboard control
+    Route::middleware(['role:verhuurder'])->group(function () {
+
+        // give back all houses and listings by logged in user
+        Route::post('/d/list', [DashboardController::class, 'list']);
+
+        // CRUD routes for content and listings by verhuurders
+        Route::post('/d/create', [ContentController::class, 'store'])->name('content.store');
+        Route::put('/d/{id}', [ContentController::class, 'update'])->name('content.update');
+        Route::delete('/d/{id}', [ContentController::class, 'delete'])->name('content.destroy');
+        Route::post('/auth/update', [AuthController::class, 'update'])->name('user.update');
+    });
 });
 Route::middleware('auth:sanctum')->post('/auth/update-profile', [AuthController::class, 'updateProfile']);
-
-
-// VERHUURDER, dashboard control
-Route::middleware(['auth:sanctum'])->group(function () {
-    // test function for role checking (api/debug)
-    Route::post('/debug', [TestController::class, 'index']);
-
-    // give back all houses and listings by logged in user
-    Route::post('/d/list', [DashboardController::class, 'list']);
-
-
-
-
-    // CRUD routes for content and listings by verhuurders
-    Route::post('/d/create', [ContentController::class, 'store'])->name('content.store');
-    Route::put('/d/{id}', [ContentController::class, 'update'])->name('content.update');
-    Route::delete('/d/{id}', [ContentController::class, 'delete'])->name('content.destroy');
-    Route::post('/auth/update', [AuthController::class, 'update'])->name('user.update');
-});
 
 // guest view
 Route::get('/content', [ContentController::class, 'guest'])->name('content.index');
 Route::get('/content-latest', [ContentController::class, 'guest_latest'])->name('content.latest');
+Route::post('/content/{id}', [ContentController::class, 'show'])->name('content.show');

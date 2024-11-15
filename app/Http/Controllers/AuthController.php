@@ -9,14 +9,18 @@ use App\Models\Notifications;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
-
+use Tymon\JWTAuth\Facades\JWTAuth;
 class AuthController extends Controller
 {
     public function getUserProfile()
     {
         $user = auth()->user();
-        $user->profile_picture_url = asset($user->profile_picture);
-
+        
+        if (file_exists(asset($user->profile_picture))) {
+            $user->profile_picture_url = asset($user->profile_picture);
+        } else {
+            $user->profile_picture_url = asset('storage/profile_pictures/default-avatar.png');
+        }
         return response()->json($user);
     }
     public function uploadProfilePicture(Request $request)
@@ -60,7 +64,11 @@ class AuthController extends Controller
             return response()->json([
                 'success' => true,
                 'token' => $token,
-                'user' => $user,
+                'user' => [
+                    'id' => $user->id,
+                    'email' => $user->email,
+                    'role' => $user->getRoleNames()->first(), // Getting the first role
+                ]
             ]);
         }
 
@@ -148,7 +156,8 @@ class AuthController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Token is valid',
-                'user' => Auth::user()
+                'user' => Auth::user(),
+                'isSeller' => Auth::user()->hasRole('verhuurder'),
             ]);
         }
 
@@ -203,6 +212,10 @@ class AuthController extends Controller
         ]);
 
         $user = Auth::user();
+
+        if (!$user->hasRole('verhuurder')) {
+            $user->assignRole('verhuurder');
+        }
 
         if ($request->has('name')) {
             $user->name = $request->name;
