@@ -17,8 +17,8 @@ use App\Http\Controllers\MailController;
 Route::post('/auth/login', [AuthController::class, 'login'])->name('user.login');
 Route::post('/auth/register', [AuthController::class, 'register'])->name('user.register');
 
-Route::get('/mail/send', [MailController::class, 'send'])->name('mail.send'); 
-Route::get('/mail/verify', [MailController::class, 'verify'])->name('mail.verify'); 
+Route::get('/mail/send', [MailController::class, 'send'])->name('mail.send');
+Route::get('/mail/verify', [MailController::class, 'verify'])->name('mail.verify');
 
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -44,7 +44,21 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //content details
 
-    Route::get('/auth/validate-token', [AuthController::class, 'validateToken'])->name('user.validateToken');
+    Route::middleware('auth:sanctum')->get('/auth/validate-token', function (Request $request) {
+        if (Auth::check()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Token is valid',
+                'user' => Auth::user(),
+                'isSeller' => Auth::user()->hasRole('verhuurder'),
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Token is invalid or expired'
+        ], 401);
+    });
 
     Route::post('/user/totalviews', [ContentController::class, 'getTotalViewsForUser']);
 
