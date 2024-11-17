@@ -106,7 +106,7 @@ class AuthController extends Controller
             $user->assignRole('verhuurder');
         }
 
-        return response()->json([
+        return response()->json(data: [
             'success' => true,
             'user' => $user,
         ]);

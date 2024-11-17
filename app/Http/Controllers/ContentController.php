@@ -68,7 +68,9 @@ class ContentController extends Controller
     }
 
     public function store(Request $request)
-    {
+{
+        // Get the authenticated user
+        $user = Auth::user();
         // Validate incoming request
         $validated = $request->validate([
             'type' => 'required|string',
@@ -85,8 +87,7 @@ class ContentController extends Controller
             'image' => 'required|string',
         ]);
 
-        // Get the authenticated user
-        $user = Auth::user();
+     
 
         // Ensure user is authenticated
         if (!$user) {
@@ -120,8 +121,12 @@ class ContentController extends Controller
     {
         $user = Auth::user();
         $totalViews = Content::where('user_id', $user->id)->sum('views');
+        $totalHouses = Content::where('user_id', $user->id)->count();
 
-        return $totalViews;
+        return response()->json([
+            'views' => $totalViews,
+            'houses' => $totalHouses,
+        ]);
     }
 
     /**
