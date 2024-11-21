@@ -64,6 +64,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/auth/user', [AuthController::class, 'getUserData']);
     Route::put('/auth/user', [AuthController::class, 'updateUserData']);
+    Route::get('/saves', [ContentController::class, 'saves'])->name('saves.index');
+
 
     // VERHUURDER, dashboard control
     Route::middleware(['role:verhuurder'])->group(function () {

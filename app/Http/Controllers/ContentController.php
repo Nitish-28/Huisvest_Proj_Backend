@@ -59,6 +59,69 @@ class ContentController extends Controller
         ]);
     }
 
+    public function saves(Request $request)
+    {
+        $user = Auth::user();
+
+        // Get the user's favorites relationship
+        $query = $user->favorites()->newQuery();
+
+        // Apply filters if provided in the request
+        if ($request->has('type') && $request->type !== 'All') {
+            $query->where('type', $request->type);
+        }
+        if ($request->has('availability') && $request->availability !== "All") {
+            $query->where('availability', $request->availability);
+        }
+        if ($request->has('city')) {
+            $query->where('city', 'like', '%' . $request->city . '%');
+        }
+        if ($request->has('price_min')) {
+            $query->where('price', '>=', $request->price_min);
+        }
+        if ($request->has('price_max')) {
+            $query->where('price', '<=', $request->price_max);
+        }
+        if ($request->has('sort')) {
+            if ($request->sort === 'up') {
+                $query->orderBy('price', 'asc');
+            } elseif ($request->sort === 'down') {
+                $query->orderBy('price', 'desc');
+            }
+        }
+        if ($request->has('search')) {
+            $searchTerm = $request->search;
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('zip', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('city', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('address', 'like', '%' . $searchTerm . '%');
+            });
+        }
+
+        // Fetch paginated results with explicitly qualified columns
+        $contents = $query->select(
+            'contents.id as content_id', // Alias to avoid ambiguity
+            'contents.type',
+            'contents.availability',
+            'contents.address',
+            'contents.city',
+            'contents.zip',
+            'contents.price',
+            'contents.bedrooms',
+            'contents.m2',
+            'contents.bathrooms',
+            'contents.created_at'
+        )->paginate(10);
+
+        // Return JSON response
+        return response()->json([
+            'data' => $contents->items(),
+            'total' => $contents->total(),
+            'last_page' => $contents->lastPage(),
+        ]);
+    }
+
+
     // guest functie gestorteerd op laatst toegevoegd 
     public function guest_latest()
     {
@@ -68,7 +131,7 @@ class ContentController extends Controller
     }
 
     public function store(Request $request)
-{
+    {
         // Get the authenticated user
         $user = Auth::user();
         // Validate incoming request
@@ -87,7 +150,7 @@ class ContentController extends Controller
             'image' => 'required|string',
         ]);
 
-     
+
 
         // Ensure user is authenticated
         if (!$user) {
