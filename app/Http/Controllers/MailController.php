@@ -68,4 +68,56 @@ class MailController extends Controller
     
         return response()->json(['message' => 'Invalid verification code'], 401);
     }
+    //password verification
+    public function verifyPassword(Request $request) {
+        // Validate the incoming request
+        $request->validate([
+            'password' => 'required',
+            'email' => 'required|email'
+        ]);
+    
+        // Retrieve the email verification record for the authenticated user
+        $user = User::where('email', $request->input('email'))->first();
+    
+        // Check if the email verification record exists and the verification code matches
+        if ($user && Hash::check($request->input('password'), $user->password)) {
+            return response()->json(['message' => 'Verification successful'], 200);
+        }
+    
+        return response()->json(['message' => 'Invalid password'], 401);
+    }
+    //password verification via email
+    public function verifyPasswordViaEmail(Request $request) {
+        // Validate the incoming request
+        $request->validate([
+            'email' => 'required|email'
+        ]);
+    
+        // Retrieve the email verification record for the authenticated user
+        $user = User::where('email', $request->input('email'))->first();
+    
+        // Check if the email verification record exists and the verification code matches
+        if ($user) {
+            $verificationCode = random_int(1000, 9999);
+            try {
+                Mail::raw('Your verification code is: ' . $verificationCode, function ($message) use ($request) {
+                    $message->to($request->input('email'))
+                            ->subject('Huisvest verification code');
+                });
+    
+                // Save to the database
+                EmailVerification::create([
+                    'email' => $request->input('email'),
+                    'user_id' => $user->id,
+                    'verification_code' => $verificationCode,
+                ]);
+    
+                return response()->json(['message' => 'Email sent successfully']);
+            } catch (Exception $e) {
+                return response()->json(['message' => 'Failed to send email', 'error' => $e->getMessage()], 500);
+            }
+        }
+    
+        return response()->json(['message' => 'Invalid email'], 401);
+    }
 }
