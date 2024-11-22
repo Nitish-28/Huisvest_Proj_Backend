@@ -38,6 +38,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/notifications', [NotificationController::class, 'showNotifications']);
 
     route::post('/bids', [BiddingController::class, 'placeBid']);
+    route::post('/bids/get', [BiddingController::class, 'getBids']);
+
 
     //logout function
     Route::post('/auth/logout', [AuthController::class, 'logout'])->name('user.logout');

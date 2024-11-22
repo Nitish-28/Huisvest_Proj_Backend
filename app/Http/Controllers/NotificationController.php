@@ -29,13 +29,12 @@ class NotificationController extends Controller
     public function markAsRead($notificationId)
     {
         $notification = Notifications::find($notificationId);
-        
+
         if (!$notification) {
             return response()->json(['message' => 'Notification not found'], 404);
         }
 
-        $notification->read = true;
-        $notification->save();
+        $notification->delete();
 
         return response()->json(['message' => 'Notification marked as read']);
     }

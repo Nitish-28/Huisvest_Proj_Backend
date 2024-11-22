@@ -10,7 +10,12 @@ class Bidding extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['sender_id', 'receiver_id', 'bid'];
+    protected $fillable = ['sender_id', 'receiver_id', 'house_id', 'bid'];
+
+    public function content()
+    {
+        return $this->belongsTo(Content::class, 'house_id');
+    }
 
     /**
      * The user who places the bid.
