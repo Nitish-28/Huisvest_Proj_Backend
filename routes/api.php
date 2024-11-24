@@ -38,8 +38,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/notifications', [NotificationController::class, 'showNotifications']);
 
     route::post('/bids', [BiddingController::class, 'placeBid']);
+    route::post('/bids/remove', [BiddingController::class, 'removeBid']);
     route::post('/bids/get', [BiddingController::class, 'getBids']);
-
 
     //logout function
     Route::post('/auth/logout', [AuthController::class, 'logout'])->name('user.logout');
@@ -78,6 +78,8 @@ Route::middleware('auth:sanctum')->group(function () {
         // CRUD routes for content and listings by verhuurders
         Route::post('/d/create', [ContentController::class, 'store'])->name('content.store');
         Route::put('/d/{id}', [ContentController::class, 'update'])->name('content.update');
+
+
         Route::delete('/d/{id}', [ContentController::class, 'delete'])->name('content.destroy');
         Route::post('/auth/update', [AuthController::class, 'update'])->name('user.update');
     });

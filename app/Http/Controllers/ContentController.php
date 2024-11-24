@@ -147,7 +147,6 @@ class ContentController extends Controller
             'm2' => 'required|numeric',
             'bedrooms' => 'required|integer',
             'bathrooms' => 'required|integer',
-            'image' => 'required|string',
         ]);
 
 
@@ -170,7 +169,7 @@ class ContentController extends Controller
             'm2' => $validated['m2'],
             'bedrooms' => $validated['bedrooms'],
             'bathrooms' => $validated['bathrooms'],
-            'image' => $validated['image'],
+            'image' => "dsa",
             'user_id' => $user->id, // <-- Automatically assign user_id
         ]);
 
@@ -253,8 +252,15 @@ class ContentController extends Controller
     public function delete(string $id)
     {
         $content = Content::findOrFail($id);
+
+        // Check if the authenticated user is the owner of the content
+        if ($content->user_id !== Auth::id()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
         $content->delete();
-        //return json
+
+        // Return JSON response
         return response()->json(['message' => 'Content deleted successfully']);
     }
 }

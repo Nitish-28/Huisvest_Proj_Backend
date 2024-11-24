@@ -30,6 +30,24 @@ class BiddingController extends Controller
         return response()->json(['message' => 'Bid placed and notification sent']);
     }
 
+    public function removeBid(Request $request)
+    {
+        $data = $request->validate([
+            'bid_id' => 'required|exists:biddings,id',
+        ]);
+
+        $bid = Bidding::find($data['bid_id']);
+
+        if ($bid->sender_id !== Auth::id()) {
+            return response()->json(['message' => 'Unauthorized to delete this bid'], 403);
+        }
+
+        $bid->delete();
+
+        return response()->json(['message' => 'Bid removed successfully'], 200);
+    }
+
+
     public function getBids(Request $request)
     {
         $userId = Auth::id();
